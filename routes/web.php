@@ -11,23 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/competency', function () {
-    return view('competency');
-});
-
-Route::get('/project', function () {
-    return view('project');
-});
-
+// Auth
 Route::auth();
 
-Route::get('/dashboard', 'HomeController@index');
+// Custom
+Route::get('/', 'HomeController@home');
 Route::get('/demand', 'DemandController@index');
 
-Route::resource('competency', 'CompetencyController');
-Route::resource('project', 'ProjectController');
-Route::resource('user', 'UserController');
+// Resources
+Route::resource('competencies', 'CompetencyController');
+Route::resource('projects', 'ProjectController');
+Route::resource('users', 'UserController');

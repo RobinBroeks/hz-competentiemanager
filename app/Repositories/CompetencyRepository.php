@@ -1,88 +1,35 @@
 <?php
-/**
- * Created by Roel van Endhoven.
- * User: Roel van Endhoven
- * Date: 8-12-16
- * Time: 12:23.
- */
 
 namespace App\Repositories;
 
 use App\Models\Competency;
-use App\Util\RepositoryInterface;
+use App\Util\AbstractRepository;
+use App\Util\Constants;
 use Illuminate\Database\Eloquent\Collection;
 
-class CompetencyRepository implements RepositoryInterface
+class CompetencyRepository extends AbstractRepository
 {
     /**
-     * Returns competency with given id from database.
-     *
-     * @param  $id
-     *
-     * @return mixed
+     * Constrcutor.
      */
-    public function getById($id)
+    public function __construct(Competency $competencies)
     {
-        return Competency::findOrFail($id);
+        parent::__construct($competencies);
     }
-
-//end getById()
 
     /**
-     * Returns all competencies in the database.
+     * Filters competencies on whether or not they are allowed to be picked by the Algorithm.
      *
-     * @return Collection|Competency[]
+     * @param Competency |Collection[] (optional) $competencies
+     *
+     * @return Collection[]
      */
-    public function getAll()
+    public function filterAllowedForAlgorithm($competencies = null)
     {
-        return Competency::get();
+        if ($competencies === null) {
+            $competencies = $this->setColumns(['id', 'pickable_for_algorithm'])->getAll();
+        }
+
+        return $competencies->where('pickable_for_algorithm', Constants::COMPETENCY_ALGORITHIM_ALLOWED_TRUE);
     }
-
-//end getAll()
-
-    /**
-     * Creates a new competency and stores it in the database.
-     *
-     * @param array $attributes
-     *
-     * @return Competency
-     */
-    public function create(array $attributes)
-    {
-        return Competency::create($attributes);
-    }
-
-//end create()
-
-    /**
-     * Removes competencies with given ids from the database.
-     *
-     * @param int $ids
-     *
-     * @return mixed
-     */
-    public function delete($ids)
-    {
-        return Competency::destroy($ids);
-    }
-
-//end delete()
-
-    /**
-     * Updates given fields of the repository with the given id.
-     *
-     * @param  array
-     * @param int $id
-     *
-     * @return Competency
-     */
-    public function update($data, $id)
-    {
-        $result = Competency::findOrFail($id)->update($data);
-        Competency::findOrFail($id)->save();
-
-        return $result;
-    }
-
-//end update()
-}//end class
+}

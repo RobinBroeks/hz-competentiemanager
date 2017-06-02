@@ -1,5 +1,6 @@
 <?php
 
+use App\Util\Constants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -16,9 +17,10 @@ class CreateCompetencyTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('abbreviation');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->float('ec-value');
             $table->string('cu-code');
+            $table->integer('pickable_for_algorithm')->default(Constants::COMPETENCY_ALGORITHIM_ALLOWED_TRUE);
             $table->timestamps();
         });
     }
